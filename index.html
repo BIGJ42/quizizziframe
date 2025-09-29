@@ -1,36 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Iframe with URL Appending</title>
+    <title>Iframe URL Modifier</title>
     <style>
-        body { font-family: sans-serif; }
-        #url-container { margin-bottom: 10px; }
-        #url-input { width: 300px; padding: 5px; }
-        #load-button { padding: 5px 10px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; margin: 2em; }
+        #url-container { display: flex; gap: 10px; margin-bottom: 15px; }
+        #url-input { flex-grow: 1; padding: 8px; font-size: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        #load-button { padding: 8px 15px; font-size: 1em; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        #load-button:hover { background-color: #0056b3; }
         #iframe-container { width: 100%; height: 80vh; }
         iframe { width: 100%; height: 100%; border: 1px solid #ccc; }
+        .explanation { background-color: #fffbe6; border: 1px solid #ffe58f; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
+    <h1>Iframe URL Modifier</h1>
     <div id="url-container">
-        <input type="text" id="url-input" placeholder="Enter a URL">
-        <button id="load-button">Load Site</button>
+        <input type="text" id="url-input" placeholder="Enter a full URL (e.g., https://www.example.com)">
+        <button id="load-button">Load Site with #quizizz</button>
+    </div>
+
+    <div class="explanation">
+        <strong>Note:</strong> This tool adds <code>#quizizz</code> to the main URL loaded in the iframe below. Due to browser security policies (the Same-Origin Policy), it is <strong>not possible</strong> to automatically add this tag to internal files like CSS, JavaScript, or images that the loaded page requests.
     </div>
 
     <div id="iframe-container">
-        <iframe id="my-iframe"></iframe>
+        <iframe id="my-iframe" title="Content from external website"></iframe>
     </div>
 
     <script>
         document.getElementById('load-button').addEventListener('click', function() {
-            var urlInput = document.getElementById('url-input').value;
-            var iframe = document.getElementById('my-iframe');
+            let urlInput = document.getElementById('url-input').value;
+            const iframe = document.getElementById('my-iframe');
 
             if (urlInput) {
+                // Ensure the URL has a protocol (http:// or https://)
+                if (!/^https?:\/\//i.test(urlInput)) {
+                    urlInput = 'https://' + urlInput;
+                    document.getElementById('url-input').value = urlInput; // Update the input field for clarity
+                }
+                
                 // Append the keyword to the URL
-                var newUrl = urlInput + '#quizizz';
+                const newUrl = urlInput + '#quizizz';
                 iframe.src = newUrl;
+            } else {
+                alert('Please enter a URL.');
             }
         });
     </script>
